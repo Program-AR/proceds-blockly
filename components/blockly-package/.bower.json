@@ -1,0 +1,29 @@
+{
+  "name": "blockly-package",
+  "homepage": "https://github.com/hugoruscitti/blockly-package",
+  "authors": [
+    "Hugo Ruscitti <hugoruscitti@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "blockly",
+    "tests",
+    "demos"
+  ],
+  "version": "0.0.14",
+  "_release": "0.0.14",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.14",
+    "commit": "45f3d1970d860f6fb824b75692ba62a38763e01f"
+  },
+  "_source": "https://github.com/Program-AR/blockly-package.git",
+  "_target": "~0.0.14",
+  "_originalSource": "blockly-package"
+}
