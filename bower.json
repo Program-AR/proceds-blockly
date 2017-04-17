@@ -26,7 +26,7 @@
     "tests",
     "demo",
     "deploy-gh-pages.sh",
-    "gp.sh",
+    "gp.sh"
   ],
   "dependencies": {
     "blockly-package": "~0.0.14"
