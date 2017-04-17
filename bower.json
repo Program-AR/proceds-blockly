@@ -1,0 +1,28 @@
+{
+  "name": "proceds-blockly",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Program-AR/proceds-blockly",
+  "authors": [
+    "Alf Sanzo <alfredo.sanzo@gmail.com>"
+  ],
+  "description": "Another procedure block for blockly",
+  "moduleType": [
+    "es6",
+    "globals"
+  ],
+  "keywords": [
+    "blockly",
+    "procedures",
+    "programar",
+    "programming",
+    "k12"
+  ],
+  "license": "LGPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
