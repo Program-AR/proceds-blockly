@@ -2,7 +2,7 @@ Blockly.Blocks.proced_pretty_def = {
   init: function () {
     this.jsonInit({
       "type": "proced_pretty_def",
-      "message0": "Definición del procedimiento: %1 %2 %3 parámetro 1 %4 %5",
+      "message0": "Definición del procedimiento: %1 %2 %3 parámetros: %4 %5 %6 %7 %8 %9 %10 %11 %12",
       "args0": [
         {
           "type": "input_dummy"
@@ -17,21 +17,65 @@ Blockly.Blocks.proced_pretty_def = {
           "align": "CENTRE"
         },
         {
-          "type": "input_value",
+          "type": "field_input",
           "name": "param1",
+          "text": "x"
+        },
+        {
+          "type": "field_input",
+          "name": "param2",
+          "text": "y"
+        },
+        {
+          "type": "field_input",
+          "name": "param3",
+          "text": "z"
+        },
+        {
+          "type": "field_input",
+          "name": "param4",
+          "text": "w"
+        },
+        {
+          "type": "field_input",
+          "name": "param5",
+          "text": "w"
+        },
+        {
+          "type": "field_input",
+          "name": "param6",
+          "text": "w"
+        },
+        {
+          "type": "input_dummy",
           "align": "RIGHT"
         },
         {
           "type": "input_statement",
           "name": "code"
-        }
+        },
+        {
+          "type": "field_image",
+          "width": 15,
+          "height": 15,
+          "src": "https://www.gstatic.com/codesite/ph/images/star_on.gif",
+          "name": "add_parameter"
+        },
       ],
-      "colour": 230,
+      "colour": 290,
       "tooltip": "",
       "helpUrl": ""
     });
+
+    var a = this.getField("add_parameter");
+    debugger
+  },
+  customContextMenu: function(options) {
+    options.unshift({ text: "Crear llamada", enabled: true, callback: function() {
+      alert("AAA");
+    }});
   }
-}
+};
 
 Blockly.JavaScript['proced_pretty_def'] = function(block) {
   var text_procname = block.getFieldValue('procName');
