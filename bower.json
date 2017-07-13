@@ -27,6 +27,6 @@
     "index.html"
   ],
   "dependencies": {
-    "blockly-package": "~0.0.14"
+    "blockly-package": "0.0.14"
   }
 }

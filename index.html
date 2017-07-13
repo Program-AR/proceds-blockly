@@ -7,6 +7,7 @@
   <script src="bower_components/blockly-package/blocks_compressed.js"></script>
   <script src="bower_components/blockly-package/es.js"></script>
   <script src="bower_components/blockly-package/javascript_compressed.js"></script>
+  <script src="proceds-blockly-original.js"></script>
   <script src="proceds-blockly.js"></script>
 </head>
 <body>
@@ -19,7 +20,19 @@
 
   <xml id="toolbox" style="display: none">
     <category name="Procedures">
-      <block type="proced_pretty_def"></block>
+      <block type="procedures_defnoreturn"></block>
+      <block type="procedures_defnoreturnnoparams"></block>
+    </category>
+    <category name="Functions">
+      <block type="procedures_defreturn"></block>
+    </category>
+    <category name="Commands">
+      <category name="Procedure invocations" custom="PROCEDURE_CALLS">
+      </category>
+    </category>
+    <category name="Expressions">
+      <category name="Function invocations" custom="FUNCTION_CALLS">
+      </category>
     </category>
     <category name="Other blocks">
       <block type="controls_if"></block>
@@ -36,13 +49,13 @@
   <textarea id="code" rows="20" cols="80"></textarea>
 
   <script>
-    var workspace = Blockly.inject('blocklyDiv',
-        {media: 'bower_components/blockly-package/media/',
-         toolbox: document.getElementById('toolbox')});
-
-   document.querySelector('#generatebtn').addEventListener('click', function() {
-     document.getElementById("code").innerHTML = Blockly.JavaScript.workspaceToCode(workspace);
-   });
+    var workspace = Blockly.inject(
+      "blocklyDiv",
+      {
+        media: "bower_components/blockly-package/media/",
+        toolbox: document.getElementById("toolbox")
+      }
+    );
   </script>
 
 </body>
