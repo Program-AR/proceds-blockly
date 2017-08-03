@@ -5,13 +5,18 @@ Blockly.Msg.PROCEDURES_DEFNORETURN_NOPARAMS = "";
 Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT = 'Describe la función...';
 Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE = "devolver algo";
 Blockly.Msg.PROCEDURES_DEFRETURN_TITLE = "Definir";
-Blockly.Msg.PROCEDURES_BEFORE_PARAMS = "con:"
+Blockly.Msg.PROCEDURES_BEFORE_PARAMS = "con:";
+Blockly.Msg.PROCEDURES_DEFNORETURN_TOOLTIP = "Crea un procedimiento.";
+Blockly.Msg.PROCEDURES_DEFRETURN_TOOLTIP = "Crea una función.";
+Blockly.Msg.PROCEDURES_ADD_PARAMETER = "Agregar parámetro";
+Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT = "Ingresa el nombre del parámetro";
+Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
 
 // --------------------------------
 // [!] Adding defaultName parameter
 // --------------------------------
 
-var makeProcedureInit = function(withReturn, withParameters, defaultName, title, comment, tooltip, helpUrl) {
+var makeProcedureInit = function(withReturn, withParametersMutator = false, defaultName, title, comment, tooltip, helpUrl) {
   return function() {
     var nameField = new Blockly.FieldTextInput(defaultName, // [!]
         Blockly.Procedures.rename);
@@ -26,7 +31,7 @@ var makeProcedureInit = function(withReturn, withParameters, defaultName, title,
           .setAlign(Blockly.ALIGN_RIGHT)
           .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
 
-    if (withParameters)
+    if (withParametersMutator)
       this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
 
     if ((this.workspace.options.comments ||
@@ -42,7 +47,7 @@ var makeProcedureInit = function(withReturn, withParameters, defaultName, title,
     this.setStatements_(true);
     this.statementConnection_ = null;
 
-    if (!withReturn && !withParameters) this.updateParams_();
+    if (!withReturn && !withParametersMutator) this.updateParams_();
   };
 };
 
@@ -50,8 +55,49 @@ var makeProcedureInit = function(withReturn, withParameters, defaultName, title,
 // [!] Using .unshift instead of .push for new options
 // ---------------------------------------------------
 
-var makeProcedureCustomMenu = function() {
+var makeProcedureCustomMenu = function(withParametersOptions = true) {
   return function(options) {
+    // Add options to create getters for each parameter.
+    if (!this.isCollapsed()) {
+      for (var i = 0; i < this.arguments_.length; i++) {
+        var option = {enabled: true};
+        var name = this.arguments_[i];
+        option.text = Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name);
+        var xmlField = goog.dom.createDom('field', null, name);
+        xmlField.setAttribute('name', 'VAR');
+        var xmlBlock = goog.dom.createDom('block', null, xmlField);
+        xmlBlock.setAttribute('type', 'variables_get');
+        option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+        options.unshift(option);
+      }
+    }
+
+    // [!]
+    if (withParametersOptions) {
+      options.unshift({
+        enabled: this.arguments_.length > 0,
+        text: Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
+        callback: function() {
+          this.arguments_.pop();
+          this.updateParams_();
+        }.bind(this)
+      });
+
+      options.unshift({
+        enabled: true,
+        text: Blockly.Msg.PROCEDURES_ADD_PARAMETER,
+        callback: function() {
+          var name = "";
+          while (name === "")
+            name = prompt(Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT);
+          if (name === null) return;
+
+          this.arguments_.push(name);
+          this.updateParams_();
+        }.bind(this)
+      });
+    }
+
     // Add option to create caller.
     var option = {enabled: true};
     var name = this.getFieldValue('NAME');
@@ -68,25 +114,31 @@ var makeProcedureCustomMenu = function() {
     option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
     options.unshift(option); // [!]
 
-    // Add options to create getters for each parameter.
-    if (!this.isCollapsed()) {
-      for (var i = 0; i < this.arguments_.length; i++) {
-        var option = {enabled: true};
-        var name = this.arguments_[i];
-        option.text = Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name);
-        var xmlField = goog.dom.createDom('field', null, name);
-        xmlField.setAttribute('name', 'VAR');
-        var xmlBlock = goog.dom.createDom('block', null, xmlField);
-        xmlBlock.setAttribute('type', 'variables_get');
-        option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
-        options.unshift(option);
-      }
+    options.pop(); // [!] Remove help
+  };
+};
+
+// -----------------------------------------
+// [!] Using PROCEDURES_BEFORE_PARAMS always
+// -----------------------------------------
+
+var makeUpdateParams = function() {
+  return function() {
+    var paramsString = this.arguments_.length > 0
+      ? Blockly.Msg.PROCEDURES_BEFORE_PARAMS + ' ' + this.arguments_.join(", ")
+      : Blockly.Msg.PROCEDURES_BEFORE_PARAMS; // [!]
+
+    Blockly.Events.disable();
+    try {
+      this.setFieldValue(paramsString, 'PARAMS');
+    } finally {
+      Blockly.Events.enable();
     }
   };
 };
 
 Blockly.Blocks['procedures_defnoreturn'].init = makeProcedureInit(
-  false, true,
+  false, false,
   Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE,
   Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE,
   Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT,
@@ -94,9 +146,10 @@ Blockly.Blocks['procedures_defnoreturn'].init = makeProcedureInit(
   Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL
 );
 Blockly.Blocks['procedures_defnoreturn'].customContextMenu = makeProcedureCustomMenu();
+Blockly.Blocks['procedures_defnoreturn'].updateParams_ = makeUpdateParams();
 
 Blockly.Blocks['procedures_defreturn'].init = makeProcedureInit(
-  true, true,
+  true, false,
   Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
   Blockly.Msg.PROCEDURES_DEFRETURN_TITLE,
   Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT,
@@ -134,7 +187,7 @@ Blockly.Blocks['procedures_defnoreturnnoparams'] = {
   getProcedureDef: Blockly.Blocks['procedures_defnoreturn'].getProcedureDef,
   getVars: Blockly.Blocks['procedures_defnoreturn'].getVars,
   renameVar: Blockly.Blocks['procedures_defnoreturn'].renameVar,
-  customContextMenu: Blockly.Blocks['procedures_defnoreturn'].customContextMenu,
+  customContextMenu: makeProcedureCustomMenu(false),
   callType_: 'procedures_callnoreturnnoparams'
 };
 
@@ -220,7 +273,9 @@ Blockly.Procedures.functionCallFlyoutCategory = function(workspace) {
   return xmlList;
 };
 
-// [!] OLD PATCH: 
+// TODO: Use the new patch (SEE BELOW) when blockly-package gets upgraded
+
+// [!] OLD PATCH:
 Blockly.Flyout.prototype.show = function(xmlList) {
   this.workspace_.setResizesEnabled(false);
   this.hide();
