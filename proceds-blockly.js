@@ -59,7 +59,7 @@ var makeProcedureCustomMenu = function(withParametersOptions = true) {
   return function(options) {
     // Add options to create getters for each parameter.
     if (!this.isCollapsed()) {
-      for (var i = 0; i < this.arguments_.length; i++) {
+      for (var i = this.arguments_.length - 1; i >= 0; i--) {
         var option = {enabled: true};
         var name = this.arguments_[i];
         option.text = Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name);
