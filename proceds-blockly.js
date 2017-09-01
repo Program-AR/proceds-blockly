@@ -40,6 +40,7 @@ var makeProcedureInit = function(withReturn, withParametersMutator = false, defa
         comment) {
       this.setCommentText(comment);
     }
+    this.setCommentText(null);
     this.setColour(Blockly.Blocks.procedures.HUE);
     this.setTooltip(tooltip);
     this.setHelpUrl(helpUrl);

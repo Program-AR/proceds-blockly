@@ -4,6 +4,7 @@ This library installs new custom procedures for blockly, with custom modificatio
 - The procedure blocks have their new context menu options at the top, including two options: "add parameter" and "remove parameter" (replacing the mutator window). The 'help' option was removed.
 - The block `procedures_defnoreturn` has been splitted in `procedures_defnoreturn` and `procedures_defnoreturnnoparams`.
 - The blocks can be added on every category you want. If you want to create a category for the calls, use the custom names `PROCEDURE_CALLS` and `FUNCTION_CALLS`.
+- Procedure descriptions are disabled by default.
 
 ```xml
 <xml id="toolbox" style="display: none">
