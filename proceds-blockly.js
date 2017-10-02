@@ -213,10 +213,11 @@ Blockly.Blocks['procedures_callnoreturnnoparams'] = {
 Blockly.Procedures.procedureCallFlyoutCategory = function(workspace) {
   var xmlList = [];
 
-  function populateProcedures(procedureList, templateName) {
+  function populateProcedures(procedureList) { // [!]
     for (var i = 0; i < procedureList.length; i++) {
       var name = procedureList[i][0];
       var args = procedureList[i][1];
+      const templateName = Blockly.Procedures.getDefinition(name, workspace).callType_; // [!]
       // <block type="procedures_callnoreturn" gap="16">
       //   <mutation name="do something">
       //     <arg name="x"></arg>
@@ -238,17 +239,18 @@ Blockly.Procedures.procedureCallFlyoutCategory = function(workspace) {
   }
 
   var tuple = Blockly.Procedures.allProcedures(workspace);
-  populateProcedures(tuple[0], 'procedures_callnoreturn'); // [!]
+  populateProcedures(tuple[0]); // [!]
   return xmlList;
 };
 
 Blockly.Procedures.functionCallFlyoutCategory = function(workspace) {
   var xmlList = [];
 
-  function populateProcedures(procedureList, templateName) {
+  function populateProcedures(procedureList) { // [!]
     for (var i = 0; i < procedureList.length; i++) {
       var name = procedureList[i][0];
       var args = procedureList[i][1];
+      const templateName = Blockly.Procedures.getDefinition(name, workspace).callType_; // [!]
       // <block type="procedures_callnoreturn" gap="16">
       //   <mutation name="do something">
       //     <arg name="x"></arg>
@@ -270,7 +272,7 @@ Blockly.Procedures.functionCallFlyoutCategory = function(workspace) {
   }
 
   var tuple = Blockly.Procedures.allProcedures(workspace);
-  populateProcedures(tuple[1], 'procedures_callreturn'); // [!]
+  populateProcedures(tuple[1]); // [!]
   return xmlList;
 };
 
