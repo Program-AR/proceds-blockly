@@ -1,5 +1,5 @@
 {
-  "name": "proceds-blockly",
+  "name": "blockly-package",
   "version": "0.0.15",
   "description": "",
   "main": "index.js",

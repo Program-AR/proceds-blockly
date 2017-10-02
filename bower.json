@@ -1,6 +1,6 @@
 {
   "name": "proceds-blockly",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/Program-AR/proceds-blockly",
   "authors": [
     "Alf Sanzo <alfredo.sanzo@gmail.com>"
@@ -27,6 +27,6 @@
     "index.html"
   ],
   "dependencies": {
-    "blockly-package": "0.0.14"
+    "blockly-package": "0.0.15"
   }
 }

@@ -274,26 +274,26 @@ Blockly.Procedures.functionCallFlyoutCategory = function(workspace) {
   return xmlList;
 };
 
-// TODO: Use the new patch (SEE BELOW) when blockly-package gets upgraded
-
-// [!] OLD PATCH:
 Blockly.Flyout.prototype.show = function(xmlList) {
   this.workspace_.setResizesEnabled(false);
   this.hide();
   this.clearOldBlocks_();
 
-  if (xmlList == Blockly.Variables.NAME_TYPE) {
-    // Special category for variables.
-    xmlList =
-        Blockly.Variables.flyoutCategory(this.workspace_.targetWorkspace);
-  } else if (xmlList == Blockly.Procedures.NAME_TYPE) {
-    // Special category for procedures.
-    xmlList =
-        Blockly.Procedures.flyoutCategory(this.workspace_.targetWorkspace);
-  } else if (xmlList == "PROCEDURE_CALLS") { // [!]
+  // Handle dynamic categories, represented by a name instead of a list of XML.
+  // Look up the correct category generation function and call that to get a
+  // valid XML list.
+  if (xmlList === "PROCEDURE_CALLS") { // [!]
     xmlList = Blockly.Procedures.procedureCallFlyoutCategory(this.workspace_.targetWorkspace);
-  } else if (xmlList == "FUNCTION_CALLS") { // [!]
+  } else if (xmlList === "FUNCTION_CALLS") { // [!]
     xmlList = Blockly.Procedures.functionCallFlyoutCategory(this.workspace_.targetWorkspace);
+  } else if (typeof xmlList == 'string') {
+    var fnToApply = this.workspace_.targetWorkspace.getToolboxCategoryCallback(
+        xmlList);
+    goog.asserts.assert(goog.isFunction(fnToApply),
+        'Couldn\'t find a callback function when opening a toolbox category.');
+    xmlList = fnToApply(this.workspace_.targetWorkspace);
+    goog.asserts.assert(goog.isArray(xmlList),
+        'The result of a toolbox category callback must be an array.');
   }
 
   this.setVisible(true);
@@ -370,43 +370,3 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.reflowWrapper_ = this.reflow.bind(this);
   this.workspace_.addChangeListener(this.reflowWrapper_);
 };
-
-// [!] NEW PATCH: d63b712736ebdcd0108b72231640d5c129ba72c3
-// Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface) {
-//   Blockly.WorkspaceSvg.superClass_.constructor.call(this, options);
-//   this.getMetrics =
-//       options.getMetrics || Blockly.WorkspaceSvg.getTopLevelWorkspaceMetrics_;
-//   this.setMetrics =
-//       options.setMetrics || Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_;
-
-//   Blockly.ConnectionDB.init(this);
-
-//   if (opt_blockDragSurface) {
-//     this.blockDragSurface_ = opt_blockDragSurface;
-//   }
-
-//   if (opt_wsDragSurface) {
-//     this.workspaceDragSurface_ = opt_wsDragSurface;
-//   }
-
-//   this.useWorkspaceDragSurface_ =
-//       this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
-
-//   this.highlightedBlocks_ = [];
-
-//   this.audioManager_ = new Blockly.WorkspaceAudio(options.parentWorkspace);
-
-//   this.grid_ = this.options.gridPattern ?
-//       new Blockly.Grid(options.gridPattern, options.gridOptions) : null;
-
-//   this.registerToolboxCategoryCallback(Blockly.VARIABLE_CATEGORY_NAME,
-//       Blockly.Variables.flyoutCategory);
-//   this.registerToolboxCategoryCallback(Blockly.PROCEDURE_CATEGORY_NAME,
-//       Blockly.Procedures.flyoutCategory);
-  
-//   this.registerToolboxCategoryCallback("PROCEDURE_CALLS", // [!]
-//       Blockly.Procedures.procedureCallFlyoutCategory);
-//   this.registerToolboxCategoryCallback("FUNCTION_CALLS", // [!]
-//       Blockly.Procedures.procedureCallFlyoutCategory);
-// };
-// goog.inherits(Blockly.WorkspaceSvg, Blockly.Workspace);
