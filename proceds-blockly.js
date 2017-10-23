@@ -46,7 +46,7 @@ var makeProcedureInit = function(withReturn, withStatements = true, withParamete
     this.setTooltip(tooltip);
     this.setHelpUrl(helpUrl);
     this.arguments_ = [];
-    if (withStatements) this.setStatements_(true);
+    this.setStatements_(withStatements);
     this.statementConnection_ = null;
 
     if (!withParametersMutator) this.updateParams_();
