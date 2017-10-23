@@ -17,7 +17,7 @@ Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
 // [!] Adding defaultName parameter
 // --------------------------------
 
-var makeProcedureInit = function(withReturn, withParametersMutator = false, defaultName, title, comment, tooltip, helpUrl) {
+var makeProcedureInit = function(withReturn, withStatements = true, withParametersMutator = false, defaultName, title, comment, tooltip, helpUrl) {
   return function() {
     var nameField = new Blockly.FieldTextInput(defaultName, // [!]
         Blockly.Procedures.rename);
@@ -46,7 +46,7 @@ var makeProcedureInit = function(withReturn, withParametersMutator = false, defa
     this.setTooltip(tooltip);
     this.setHelpUrl(helpUrl);
     this.arguments_ = [];
-    this.setStatements_(true);
+    if (withStatements) this.setStatements_(true);
     this.statementConnection_ = null;
 
     if (!withParametersMutator) this.updateParams_();
@@ -140,7 +140,7 @@ var makeUpdateParams = function() {
 };
 
 Blockly.Blocks['procedures_defnoreturn'].init = makeProcedureInit(
-  false, false,
+  false, true, false,
   Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE,
   Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE,
   Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT,
@@ -151,7 +151,7 @@ Blockly.Blocks['procedures_defnoreturn'].customContextMenu = makeProcedureCustom
 Blockly.Blocks['procedures_defnoreturn'].updateParams_ = makeUpdateParams();
 
 Blockly.Blocks['procedures_defreturn'].init = makeProcedureInit(
-  true, false,
+  true, true, false,
   Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
   Blockly.Msg.PROCEDURES_DEFRETURN_TITLE,
   Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT,
@@ -167,7 +167,7 @@ Blockly.Blocks['procedures_defreturn'].updateParams_ = makeUpdateParams();
 
 Blockly.Blocks['procedures_defnoreturnnoparams'] = {
   init: makeProcedureInit(
-    false, false,
+    false, true, false,
     Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE,
     Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE,
     Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT,
@@ -214,7 +214,7 @@ Blockly.Blocks['procedures_callnoreturnnoparams'] = {
 
 Blockly.Blocks['procedures_defreturnnoparams'] = {
   init: makeProcedureInit(
-    true, false,
+    true, true, false,
     Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
     Blockly.Msg.PROCEDURES_DEFRETURN_TITLE,
     Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT,
@@ -253,6 +253,53 @@ Blockly.Blocks['procedures_callreturnnoparams'] = {
   onchange: Blockly.Blocks['procedures_callreturn'].onchange,
   customContextMenu: Blockly.Blocks['procedures_callreturn'].customContextMenu,
   defType_: 'procedures_defreturnnoparams'
+};
+
+// --------------------------------------------------------
+// [!] Adding a new type of function only with return value
+// --------------------------------------------------------
+
+Blockly.Blocks['procedures_defreturnsimple'] = {
+  init: makeProcedureInit(
+    true, false, false,
+    Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
+    Blockly.Msg.PROCEDURES_DEFRETURN_TITLE,
+    Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT,
+    Blockly.Msg.PROCEDURES_DEFRETURN_TOOLTIP,
+    Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL
+  ),
+  setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
+  updateParams_: function() {
+    Blockly.Events.disable();
+    try {
+      this.setFieldValue(Blockly.Msg.PROCEDURES_DEFRETURN_NOPARAMS, 'PARAMS');
+    } finally {
+      Blockly.Events.enable();
+    }
+  },
+  mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
+  domToMutation: Blockly.Blocks['procedures_defreturn'].domToMutation,
+  decompose: Blockly.Blocks['procedures_defreturn'].decompose,
+  compose: Blockly.Blocks['procedures_defreturn'].compose,
+  getProcedureDef: Blockly.Blocks['procedures_defreturn'].getProcedureDef,
+  getVars: Blockly.Blocks['procedures_defreturn'].getVars,
+  renameVar: Blockly.Blocks['procedures_defreturn'].renameVar,
+  customContextMenu: makeProcedureCustomMenu(false),
+  callType_: 'procedures_callreturnsimple'
+};
+
+Blockly.Blocks['procedures_callreturnsimple'] = {
+  init: Blockly.Blocks['procedures_callreturn'].init,
+  getProcedureCall: Blockly.Blocks['procedures_callreturn'].getProcedureCall,
+  renameProcedure: Blockly.Blocks['procedures_callreturn'].renameProcedure,
+  setProcedureParameters_: Blockly.Blocks['procedures_callreturn'].setProcedureParameters_,
+  updateShape_: Blockly.Blocks['procedures_callreturn'].updateShape_,
+  mutationToDom: Blockly.Blocks['procedures_callreturn'].mutationToDom,
+  domToMutation: Blockly.Blocks['procedures_callreturn'].domToMutation,
+  renameVar: Blockly.Blocks['procedures_callreturn'].renameVar,
+  onchange: Blockly.Blocks['procedures_callreturn'].onchange,
+  customContextMenu: Blockly.Blocks['procedures_callreturn'].customContextMenu,
+  defType_: 'procedures_defreturnsimple'
 };
 
 // -------------------------------------------------------------------
