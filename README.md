@@ -7,6 +7,17 @@ This library installs new custom procedures for blockly, with custom modificatio
 - The blocks can be added on every category you want. If you want to create a category for the calls, use the custom names `PROCEDURE_CALLS` and `FUNCTION_CALLS`.
 - Procedure descriptions are disabled by default.
 
+## Usage
+```
+  <script src="bower_components/proceds-blockly/proceds-blockly-original.js"></script>
+  <script src="bower_components/proceds-blockly/proceds-blockly.js"></script>
+  <script>
+    initProcedsBlockly();
+    // or initProcedsBlockly("Statement"); for custom statement type configurations
+  </script>
+```
+
+## Example
 ```xml
 <xml id="toolbox" style="display: none">
   <category name="Procedures">
@@ -35,4 +46,5 @@ This library installs new custom procedures for blockly, with custom modificatio
   </category>
   </xml>
 ```
+
 See the [demo](program-ar.github.io/proceds-blockly)!
