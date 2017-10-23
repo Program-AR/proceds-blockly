@@ -127,6 +127,7 @@ function initProcedsBlockly(customStatementType) {
 
   var oldProceduresCallNoReturnInit = Blockly.Blocks['procedures_callnoreturn'].init;
   Blockly.Blocks['procedures_callnoreturn'].init = function() {
+    oldProceduresCallNoReturnInit.call(this);
     if (customStatementType) {
       this.jsonInit({
         type: customStatementType,
@@ -134,7 +135,6 @@ function initProcedsBlockly(customStatementType) {
         nextStatement: customStatementType
       });
     }
-    oldProceduresCallNoReturnInit.call(this);
   };
 
   // -----------------------------------------
@@ -212,7 +212,7 @@ function initProcedsBlockly(customStatementType) {
   };
 
   Blockly.Blocks['procedures_callnoreturnnoparams'] = {
-    init: Blockly.Blocks['procedures_callnoreturn'],
+    init: Blockly.Blocks['procedures_callnoreturn'].init,
     getProcedureCall: Blockly.Blocks['procedures_callnoreturn'].getProcedureCall,
     renameProcedure: Blockly.Blocks['procedures_callnoreturn'].renameProcedure,
     setProcedureParameters_: Blockly.Blocks['procedures_callnoreturn'].setProcedureParameters_,
