@@ -91,8 +91,8 @@ function initProcedsBlockly(customStatementType) {
           text: Blockly.Msg.PROCEDURES_ADD_PARAMETER,
           callback: function() {
             var name = "";
-            while (name === "")
-              name = prompt(Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT);
+            while (name === "") // Rompe encapsulamiento
+              name = Blockly.Blocks['procedures_mutatorarg'].validator_(prompt(Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT));
             if (name === null) return;
 
             this.arguments_.push(name);
