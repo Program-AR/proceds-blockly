@@ -93,10 +93,15 @@ function initProcedsBlockly(customStatementType) {
             }
           );
 
+          var nameField = new Blockly.FieldTextInput(name, function(text) {
+            self.arguments_[i] = text;
+            return text;
+          });
+
           self
             .appendDummyInput(id)
             .appendField(Blockly.Msg.PROCEDURES_BEFORE_PARAMS)
-            .appendField(new Blockly.FieldTextInput(name), 'ARG' + i)
+            .appendField(nameField, 'ARG' + i)
             .appendField(removeParameter);
         
           self.moveInputBefore(id, 'STACK');
