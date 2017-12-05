@@ -54,23 +54,39 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_ADD_PARAMETER = "Agregar parámetro";
   Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT = "Ingresa el nombre del parámetro";
   Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
+  Blockly.Msg.PROCEDURES_PARAMETER = "parámetro";
 
   // --------------------------------
   // [!] Adding custom procedure init
   // --------------------------------
 
-  var makeProcedureInit = function(withReturn, withStatements = true, withParametersMutator = false, defaultName, title, comment, tooltip, helpUrl) {
+  var makeProcedureInit = function(withReturn, withStatements = true, withParameters = false, defaultName, title, comment, tooltip, helpUrl) {
     return function() {
       var nameField = new Blockly.FieldTextInput(defaultName, // [!]
           Blockly.Procedures.rename);
       nameField.setSpellcheck(false);
 
-      const button1 = new Blockly.FieldImage( // [!]
+      const self = this;
+
+      // [!]
+      const addParameter = new Blockly.FieldImage(
         PLUS,
         16,
         16,
-        "Add",
-        function() { alert("Agregar"); }
+        Blockly.Msg.PROCEDURES_ADD_PARAMETER,
+        function() {
+          var i = self.arguments_.length + 1;
+          var name = Blockly.Msg.PROCEDURES_PARAMETER + i;
+          self.arguments_.push(name);
+          self.updateParams_();
+       
+          var id = "INPUTARG" + i;
+          var previousInput = self.getInput("INPUTARG" + (i - 1));
+          if (previousInput) previousInput.appendField(", ")
+          self.appendDummyInput(id).appendField(new Blockly.FieldTextInput(name), 'ARG' + i);
+        
+          self.moveInputBefore(id, 'STACK');
+        }
       );
 
       const button2 = new Blockly.FieldImage( // [!]
@@ -81,20 +97,21 @@ function initProcedsBlockly(customStatementType) {
         function() { alert("Sacar"); }
       );
 
-      this.appendDummyInput()
+      const input = this.appendDummyInput()
           .appendField(title)
           .appendField(nameField, 'NAME')
-          .appendField('', 'PARAMS')
-          .appendField(button1)
-          .appendField(button2);
+          .appendField('', 'PARAMS');
+
+      if (withParameters)
+        input.appendField(addParameter);
 
       if (withReturn)
         this.appendValueInput('RETURN')
             .setAlign(Blockly.ALIGN_RIGHT)
             .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
 
-      if (withParametersMutator)
-        this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+      // if (withParametersMutator)
+      //   this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
 
       if ((this.workspace.options.comments ||
            (this.workspace.options.parentWorkspace &&
@@ -110,7 +127,7 @@ function initProcedsBlockly(customStatementType) {
       this.setStatements_(withStatements);
       this.statementConnection_ = null;
 
-      if (!withParametersMutator) this.updateParams_();
+      // if (!withParametersMutator) this.updateParams_();
     };
   };
 
@@ -197,27 +214,27 @@ function initProcedsBlockly(customStatementType) {
     }
   };
 
-  // -----------------------------------------
-  // [!] Using PROCEDURES_BEFORE_PARAMS always
-  // -----------------------------------------
+  // ---------------------------------------
+  // [!] Using custom updateParams_ function
+  // ---------------------------------------
 
   var makeUpdateParams = function() {
     return function() {
-      var paramsString = this.arguments_.length > 0
-        ? Blockly.Msg.PROCEDURES_BEFORE_PARAMS + ' ' + this.arguments_.join(", ")
-        : Blockly.Msg.PROCEDURES_BEFORE_PARAMS; // [!]
+      // var paramsString = this.arguments_.length > 0
+      //   ? Blockly.Msg.PROCEDURES_BEFORE_PARAMS + ' ' + this.arguments_.join(", ")
+      //   : Blockly.Msg.PROCEDURES_BEFORE_PARAMS; // [!]
 
-      Blockly.Events.disable();
-      try {
-        this.setFieldValue(paramsString, 'PARAMS');
-      } finally {
-        Blockly.Events.enable();
-      }
+      // Blockly.Events.disable();
+      // try {
+      //   this.setFieldValue(paramsString, 'PARAMS');
+      // } finally {
+      //   Blockly.Events.enable();
+      // }
     };
   };
 
   Blockly.Blocks['procedures_defnoreturn'].init = makeProcedureInit(
-    false, true, false,
+    false, true, true,
     Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE,
     Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE,
     Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT,
@@ -228,7 +245,7 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Blocks['procedures_defnoreturn'].updateParams_ = makeUpdateParams();
 
   Blockly.Blocks['procedures_defreturn'].init = makeProcedureInit(
-    true, true, false,
+    true, true, true,
     Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
     Blockly.Msg.PROCEDURES_DEFRETURN_TITLE,
     Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT,
@@ -252,14 +269,7 @@ function initProcedsBlockly(customStatementType) {
       Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL
     ),
     setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
-    updateParams_: function() {
-      Blockly.Events.disable();
-      try {
-        this.setFieldValue(Blockly.Msg.PROCEDURES_DEFNORETURN_NOPARAMS, 'PARAMS');
-      } finally {
-        Blockly.Events.enable();
-      }
-    },
+    updateParams_: makeUpdateParams(),
     mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
     domToMutation: Blockly.Blocks['procedures_defnoreturn'].domToMutation,
     decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
@@ -291,7 +301,7 @@ function initProcedsBlockly(customStatementType) {
 
   Blockly.Blocks['procedures_defreturnsimplewithparams'] = {
     init: makeProcedureInit(
-      true, false, false,
+      true, false, true,
       Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE,
       Blockly.Msg.PROCEDURES_DEFRETURN_TITLE,
       Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT,
@@ -299,7 +309,7 @@ function initProcedsBlockly(customStatementType) {
       Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL
     ),
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
-    updateParams_: Blockly.Blocks['procedures_defreturn'].updateParams_,
+    updateParams_: makeUpdateParams(),
     mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
     domToMutation: Blockly.Blocks['procedures_defreturn'].domToMutation,
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
@@ -339,14 +349,7 @@ function initProcedsBlockly(customStatementType) {
       Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL
     ),
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
-    updateParams_: function() {
-      Blockly.Events.disable();
-      try {
-        this.setFieldValue(Blockly.Msg.PROCEDURES_DEFRETURN_NOPARAMS, 'PARAMS');
-      } finally {
-        Blockly.Events.enable();
-      }
-    },
+    updateParams_: makeUpdateParams(),
     mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
     domToMutation: Blockly.Blocks['procedures_defreturn'].domToMutation,
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
