@@ -1,3 +1,41 @@
+// -------------------------------------
+// [!] Fixing FieldImage's click handler
+// -------------------------------------
+
+Blockly.FieldImage.prototype.init = function() {
+  if (this.fieldGroup_) {
+    // Image has already been initialized once.
+    return;
+  }
+  // Build the DOM.
+  /** @type {SVGElement} */
+  this.fieldGroup_ = Blockly.utils.createSvgElement('g', {}, null);
+  if (!this.visible_) {
+    this.fieldGroup_.style.display = 'none';
+  }
+  /** @type {SVGElement} */
+  this.imageElement_ = Blockly.utils.createSvgElement(
+    'image',
+    {
+      'height': this.height_ + 'px',
+      'width': this.width_ + 'px'
+    },
+    this.fieldGroup_);
+  this.setValue(this.src_);
+  this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+
+  // Configure the field to be transparent with respect to tooltips.
+  this.setTooltip(this.sourceBlock_);
+  Blockly.Tooltip.bindMouseEvents(this.imageElement_);
+
+  if (this.clickHandler_) // [!]
+    this.imageElement_.addEventListener("click", this.clickHandler_); 
+};
+
+// -------------------
+// [!] proceds-blockly
+// -------------------
+
 function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT = 'Describe el procedimiento...';
   Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE = "Hacer algo";
@@ -15,7 +53,7 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
 
   // --------------------------------
-  // [!] Adding defaultName parameter
+  // [!] Adding custom procedure init
   // --------------------------------
 
   var makeProcedureInit = function(withReturn, withStatements = true, withParametersMutator = false, defaultName, title, comment, tooltip, helpUrl) {
@@ -23,10 +61,20 @@ function initProcedsBlockly(customStatementType) {
       var nameField = new Blockly.FieldTextInput(defaultName, // [!]
           Blockly.Procedures.rename);
       nameField.setSpellcheck(false);
+
+      const button = new Blockly.FieldImage( // [!]
+        "https://cdn.bulbagarden.net/upload/thumb/0/0d/025Pikachu.png/250px-025Pikachu.png",
+        17,
+        17,
+        "Test",
+        function() { alert("Hola"); }
+      );
+
       this.appendDummyInput()
           .appendField(title)
           .appendField(nameField, 'NAME')
-          .appendField('', 'PARAMS');
+          .appendField('', 'PARAMS')
+          .appendField(button);
 
       if (withReturn)
         this.appendValueInput('RETURN')
