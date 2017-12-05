@@ -81,9 +81,19 @@ function initProcedsBlockly(customStatementType) {
       }
     );
 
-    var nameField = new Blockly.FieldTextInput(name, function(text) {
-      self.arguments_[i] = text;
-      return text;
+    var nameField = new Blockly.FieldTextInput(name, function(newName) {
+      var oldName = self.arguments_[i];
+      self.arguments_[i] = newName;
+      
+      var blocks = self.workspace.getAllBlocks();
+      for (block of blocks)
+        if (block.type === "variables_get") {
+          var varField = block.getField("VAR");
+          if (varField.getValue() === oldName)
+            varField.setValue(newName);
+        }
+
+      return newName;
     });
 
     self
@@ -182,6 +192,7 @@ function initProcedsBlockly(customStatementType) {
           xmlField.setAttribute('name', 'VAR');
           var xmlBlock = goog.dom.createDom('block', null, xmlField);
           xmlBlock.setAttribute('type', 'variables_get');
+          xmlBlock.setAttribute('daddy', 'Hacer algo'); // [!]
           option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
           options.unshift(option);
         }
