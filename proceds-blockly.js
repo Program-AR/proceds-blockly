@@ -56,9 +56,64 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
   Blockly.Msg.PROCEDURES_PARAMETER = "parámetro";
 
-  // --------------------------------
-  // [!] Adding custom procedure init
-  // --------------------------------
+  // --------------------------------------
+  // [!] Adding custom procedure parameters
+  // --------------------------------------
+
+  var addParameter = function(self, index, name) {
+    var i = index === undefined ? self.arguments_.length : index;
+    var name = name === undefined ? Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1) : name;
+    var id = "INPUTARG" + i;
+
+    if (index === undefined) {
+      self.arguments_.push(name);
+      self.updateParams_();
+    }
+ 
+    var removeParameter = new Blockly.FieldImage(
+      MINUS,
+      16,
+      16,
+      Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
+      function() {
+        self.removeInput(id);
+        self.arguments_.splice(i, 1);
+      }
+    );
+
+    var nameField = new Blockly.FieldTextInput(name, function(text) {
+      self.arguments_[i] = text;
+      return text;
+    });
+
+    self
+      .appendDummyInput(id)
+      .appendField(Blockly.Msg.PROCEDURES_BEFORE_PARAMS)
+      .appendField(nameField, 'ARG' + i)
+      .appendField(removeParameter);
+  
+    self.moveInputBefore(id, 'STACK');
+  };
+
+  var makeProcedureDomToMutation = function() {
+    return function(xmlElement) {
+      this.arguments_ = [];
+      for (var i = 0, childNode; childNode = xmlElement.childNodes[i]; i++) {
+        if (childNode.nodeName.toLowerCase() == 'arg') {
+          this.arguments_.push(childNode.getAttribute('name'));
+        }
+      }
+      this.updateParams_();
+      Blockly.Procedures.mutateCallers(this);
+
+      // Show or hide the statement input.
+      this.setStatements_(xmlElement.getAttribute('statements') !== 'false');
+
+      this.arguments_.forEach(function(name, i) {
+        addParameter(this, i, name);
+      }.bind(this));
+    };
+  }
 
   var makeProcedureInit = function(withReturn, withStatements = true, withParameters = false, defaultName, title, comment, tooltip, helpUrl) {
     return function() {
@@ -69,51 +124,12 @@ function initProcedsBlockly(customStatementType) {
       var self = this;
 
       // [!]
-      var addParameter = new Blockly.FieldImage(
+      var addParameterButton = new Blockly.FieldImage(
         PLUS,
         16,
         16,
         Blockly.Msg.PROCEDURES_ADD_PARAMETER,
-        function() {
-          var i = self.arguments_.length;
-          var name = Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1);
-          var id = "INPUTARG" + i;
-
-          self.arguments_.push(name);
-          self.updateParams_();
-       
-          var removeParameter = new Blockly.FieldImage(
-            MINUS,
-            16,
-            16,
-            Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
-            function() {
-              self.removeInput(id);
-              self.arguments_.splice(i, 1);
-            }
-          );
-
-          var nameField = new Blockly.FieldTextInput(name, function(text) {
-            self.arguments_[i] = text;
-            return text;
-          });
-
-          self
-            .appendDummyInput(id)
-            .appendField(Blockly.Msg.PROCEDURES_BEFORE_PARAMS)
-            .appendField(nameField, 'ARG' + i)
-            .appendField(removeParameter);
-        
-          self.moveInputBefore(id, 'STACK');
-        }
-      );
-
-      var button2 = new Blockly.FieldImage( // [!]
-        MINUS,
-        16,
-        16,
-        "Add",
-        function() { alert("Sacar"); }
+        function() { addParameter(self); }
       );
 
       var input = this.appendDummyInput()
@@ -122,7 +138,7 @@ function initProcedsBlockly(customStatementType) {
           .appendField('', 'PARAMS');
 
       if (withParameters)
-        input.appendField(addParameter);
+        input.appendField(addParameterButton);
 
       if (withReturn)
         this.appendValueInput('RETURN')
@@ -150,9 +166,9 @@ function initProcedsBlockly(customStatementType) {
     };
   };
 
-  // ---------------------------------------------------
-  // [!] Using .unshift instead of .push for new options
-  // ---------------------------------------------------
+  // -----------------------
+  // [!] Custom context menu
+  // -----------------------
 
   var makeProcedureCustomMenu = function(withParametersOptions = true) {
     return function(options) {
@@ -172,30 +188,30 @@ function initProcedsBlockly(customStatementType) {
       }
 
       // [!]
-      if (withParametersOptions) {
-        options.unshift({
-          enabled: this.arguments_.length > 0,
-          text: Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
-          callback: function() {
-            this.arguments_.pop();
-            this.updateParams_();
-          }.bind(this)
-        });
+      // if (withParametersOptions) {
+      //   options.unshift({
+      //     enabled: this.arguments_.length > 0,
+      //     text: Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
+      //     callback: function() {
+      //       this.arguments_.pop();
+      //       this.updateParams_();
+      //     }.bind(this)
+      //   });
 
-        options.unshift({
-          enabled: true,
-          text: Blockly.Msg.PROCEDURES_ADD_PARAMETER,
-          callback: function() {
-            var name = "";
-            while (name === "") // Rompe encapsulamiento
-              name = Blockly.Blocks['procedures_mutatorarg'].validator_(prompt(Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT));
-            if (name === null) return;
+      //   options.unshift({
+      //     enabled: true,
+      //     text: Blockly.Msg.PROCEDURES_ADD_PARAMETER,
+      //     callback: function() {
+      //       var name = "";
+      //       while (name === "") // Rompe encapsulamiento
+      //         name = Blockly.Blocks['procedures_mutatorarg'].validator_(prompt(Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT));
+      //       if (name === null) return;
 
-            this.arguments_.push(name);
-            this.updateParams_();
-          }.bind(this)
-        });
-      }
+      //       this.arguments_.push(name);
+      //       this.updateParams_();
+      //     }.bind(this)
+      //   });
+      // }
 
       // Add option to create caller.
       var option = {enabled: true};
@@ -233,24 +249,11 @@ function initProcedsBlockly(customStatementType) {
     }
   };
 
-  // ---------------------------------------
-  // [!] Using custom updateParams_ function
-  // ---------------------------------------
+  // -------------------------------
+  // [!] Patching default procedures
+  // -------------------------------
 
-  var makeUpdateParams = function() {
-    return function() {
-      // var paramsString = this.arguments_.length > 0
-      //   ? Blockly.Msg.PROCEDURES_BEFORE_PARAMS + ' ' + this.arguments_.join(", ")
-      //   : Blockly.Msg.PROCEDURES_BEFORE_PARAMS; // [!]
-
-      // Blockly.Events.disable();
-      // try {
-      //   this.setFieldValue(paramsString, 'PARAMS');
-      // } finally {
-      //   Blockly.Events.enable();
-      // }
-    };
-  };
+  var makeUpdateParams = function() { return function() { }; };
 
   Blockly.Blocks['procedures_defnoreturn'].init = makeProcedureInit(
     false, true, true,
@@ -262,6 +265,7 @@ function initProcedsBlockly(customStatementType) {
   );
   Blockly.Blocks['procedures_defnoreturn'].customContextMenu = makeProcedureCustomMenu();
   Blockly.Blocks['procedures_defnoreturn'].updateParams_ = makeUpdateParams();
+  Blockly.Blocks['procedures_defnoreturn'].domToMutation = makeProcedureDomToMutation();
 
   Blockly.Blocks['procedures_defreturn'].init = makeProcedureInit(
     true, true, true,
@@ -273,6 +277,7 @@ function initProcedsBlockly(customStatementType) {
   );
   Blockly.Blocks['procedures_defreturn'].customContextMenu = makeProcedureCustomMenu();
   Blockly.Blocks['procedures_defreturn'].updateParams_ = makeUpdateParams();
+  Blockly.Blocks['procedures_defreturn'].domToMutation = makeProcedureDomToMutation();
 
   // -------------------------------------------------
   // [!] Adding a new type of procedure with no params
@@ -290,7 +295,7 @@ function initProcedsBlockly(customStatementType) {
     setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
     mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
-    domToMutation: Blockly.Blocks['procedures_defnoreturn'].domToMutation,
+    domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
     compose: Blockly.Blocks['procedures_defnoreturn'].compose,
     getProcedureDef: Blockly.Blocks['procedures_defnoreturn'].getProcedureDef,
@@ -330,7 +335,7 @@ function initProcedsBlockly(customStatementType) {
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
     mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
-    domToMutation: Blockly.Blocks['procedures_defreturn'].domToMutation,
+    domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
     compose: Blockly.Blocks['procedures_defreturn'].compose,
     getProcedureDef: Blockly.Blocks['procedures_defreturn'].getProcedureDef,
@@ -370,7 +375,7 @@ function initProcedsBlockly(customStatementType) {
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
     mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
-    domToMutation: Blockly.Blocks['procedures_defreturn'].domToMutation,
+    domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
     compose: Blockly.Blocks['procedures_defreturn'].compose,
     getProcedureDef: Blockly.Blocks['procedures_defreturn'].getProcedureDef,
