@@ -48,7 +48,7 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_DEFRETURN_COMMENT = 'Describe la función...';
   Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE = "devolver algo";
   Blockly.Msg.PROCEDURES_DEFRETURN_TITLE = "Definir";
-  Blockly.Msg.PROCEDURES_BEFORE_PARAMS = "con:";
+  Blockly.Msg.PROCEDURES_BEFORE_PARAMS = "con";
   Blockly.Msg.PROCEDURES_DEFNORETURN_TOOLTIP = "Crea un procedimiento.";
   Blockly.Msg.PROCEDURES_DEFRETURN_TOOLTIP = "Crea una función.";
   Blockly.Msg.PROCEDURES_ADD_PARAMETER = "Agregar parámetro";
@@ -66,30 +66,44 @@ function initProcedsBlockly(customStatementType) {
           Blockly.Procedures.rename);
       nameField.setSpellcheck(false);
 
-      const self = this;
+      var self = this;
 
       // [!]
-      const addParameter = new Blockly.FieldImage(
+      var addParameter = new Blockly.FieldImage(
         PLUS,
         16,
         16,
         Blockly.Msg.PROCEDURES_ADD_PARAMETER,
         function() {
-          var i = self.arguments_.length + 1;
-          var name = Blockly.Msg.PROCEDURES_PARAMETER + i;
+          var i = self.arguments_.length;
+          var name = Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1);
+          var id = "INPUTARG" + i;
+
           self.arguments_.push(name);
           self.updateParams_();
        
-          var id = "INPUTARG" + i;
-          var previousInput = self.getInput("INPUTARG" + (i - 1));
-          if (previousInput) previousInput.appendField(", ")
-          self.appendDummyInput(id).appendField(new Blockly.FieldTextInput(name), 'ARG' + i);
+          var removeParameter = new Blockly.FieldImage(
+            MINUS,
+            16,
+            16,
+            Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
+            function() {
+              self.removeInput(id);
+              self.arguments_.splice(i, 1);
+            }
+          );
+
+          self
+            .appendDummyInput(id)
+            .appendField(Blockly.Msg.PROCEDURES_BEFORE_PARAMS)
+            .appendField(new Blockly.FieldTextInput(name), 'ARG' + i)
+            .appendField(removeParameter);
         
           self.moveInputBefore(id, 'STACK');
         }
       );
 
-      const button2 = new Blockly.FieldImage( // [!]
+      var button2 = new Blockly.FieldImage( // [!]
         MINUS,
         16,
         16,
@@ -97,7 +111,7 @@ function initProcedsBlockly(customStatementType) {
         function() { alert("Sacar"); }
       );
 
-      const input = this.appendDummyInput()
+      var input = this.appendDummyInput()
           .appendField(title)
           .appendField(nameField, 'NAME')
           .appendField('', 'PARAMS');
@@ -386,7 +400,7 @@ function initProcedsBlockly(customStatementType) {
       for (var i = 0; i < procedureList.length; i++) {
         var name = procedureList[i][0];
         var args = procedureList[i][1];
-        const templateName = Blockly.Procedures.getDefinition(name, workspace).callType_; // [!]
+        var templateName = Blockly.Procedures.getDefinition(name, workspace).callType_; // [!]
         // <block type="procedures_callnoreturn" gap="16">
         //   <mutation name="do something">
         //     <arg name="x"></arg>
@@ -419,7 +433,7 @@ function initProcedsBlockly(customStatementType) {
       for (var i = 0; i < procedureList.length; i++) {
         var name = procedureList[i][0];
         var args = procedureList[i][1];
-        const templateName = Blockly.Procedures.getDefinition(name, workspace).callType_; // [!]
+        var templateName = Blockly.Procedures.getDefinition(name, workspace).callType_; // [!]
         // <block type="procedures_callnoreturn" gap="16">
         //   <mutation name="do something">
         //     <arg name="x"></arg>
