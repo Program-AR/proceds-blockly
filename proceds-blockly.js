@@ -169,6 +169,13 @@ function initProcedsBlockly(customStatementType) {
       }.bind(this));
 
       var timestamp = xmlElement.getAttribute("timestamp"); // [!]
+      var blocks = this.workspace.getAllBlocks();
+      for (block of blocks)
+        if (block.type === this.type && block.$timestamp === timestamp) {
+          timestamp = null;
+          break;
+        }
+
       this.$timestamp = timestamp || Date.now();
     };
   }
