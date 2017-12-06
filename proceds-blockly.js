@@ -110,7 +110,7 @@ function initProcedsBlockly(customStatementType) {
       
       var blocks = self.workspace.getAllBlocks();
       for (block of blocks)
-        if (block.type === "variables_get" && block.$parent === self.$timestamp) {
+        if (block.type === "variables_get" && block.$parent === self.id) {
           var varField = block.getField("VAR");
           if (varField.getValue() === oldName) {
             varField.setValue(newName);
@@ -127,27 +127,6 @@ function initProcedsBlockly(customStatementType) {
       .appendField(removeParameter);
   
     self.moveInputBefore(id, 'STACK');
-  };
-
-  var makeProcedureMutationToDom = function() {
-    return function() {
-      var container = document.createElement('mutation');
-
-      for (var i = 0; i < this.arguments_.length; i++) {
-        var parameter = document.createElement('arg');
-        parameter.setAttribute('name', this.arguments_[i]);
-        container.appendChild(parameter);
-      }
-
-      // Save whether the statement input is visible.
-      if (!this.hasStatements_) {
-        container.setAttribute('statements', 'false');
-      }
-
-      container.setAttribute("timestamp", this.$timestamp || Date.now()); // [!]
-
-      return container;
-    }
   };
 
   var makeProcedureDomToMutation = function() {
@@ -167,16 +146,6 @@ function initProcedsBlockly(customStatementType) {
       this.arguments_.forEach(function(name, i) { // [!]
         addParameter(this, i, name);
       }.bind(this));
-
-      var timestamp = xmlElement.getAttribute("timestamp"); // [!]
-      var blocks = this.workspace.getAllBlocks();
-      for (block of blocks)
-        if (block.type === this.type && block.$timestamp === timestamp) {
-          timestamp = null;
-          break;
-        }
-
-      this.$timestamp = timestamp || Date.now();
     };
   }
 
@@ -228,8 +197,6 @@ function initProcedsBlockly(customStatementType) {
       this.statementConnection_ = null;
 
       // if (!withParametersMutator) this.updateParams_();
-
-      this.$timestamp = Date.now(); // [!]
     };
   };
 
@@ -253,7 +220,7 @@ function initProcedsBlockly(customStatementType) {
           var callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
           option.callback = function() {
             var block = callback();
-            block.$parent = this.$timestamp;
+            block.$parent = this.id;
           }.bind(this);
 
           options.unshift(option);
@@ -338,7 +305,6 @@ function initProcedsBlockly(customStatementType) {
   );
   Blockly.Blocks['procedures_defnoreturn'].customContextMenu = makeProcedureCustomMenu();
   Blockly.Blocks['procedures_defnoreturn'].updateParams_ = makeUpdateParams();
-  Blockly.Blocks['procedures_defnoreturn'].mutationToDom = makeProcedureMutationToDom();
   Blockly.Blocks['procedures_defnoreturn'].domToMutation = makeProcedureDomToMutation();
 
   Blockly.Blocks['procedures_defreturn'].init = makeProcedureInit(
@@ -351,7 +317,6 @@ function initProcedsBlockly(customStatementType) {
   );
   Blockly.Blocks['procedures_defreturn'].customContextMenu = makeProcedureCustomMenu();
   Blockly.Blocks['procedures_defreturn'].updateParams_ = makeUpdateParams();
-  Blockly.Blocks['procedures_defreturn'].mutationToDom = makeProcedureMutationToDom();
   Blockly.Blocks['procedures_defreturn'].domToMutation = makeProcedureDomToMutation();
 
   // -------------------------------------------------
@@ -369,7 +334,7 @@ function initProcedsBlockly(customStatementType) {
     ),
     setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
-    mutationToDom: makeProcedureMutationToDom(),
+    mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
     domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
     compose: Blockly.Blocks['procedures_defnoreturn'].compose,
@@ -409,7 +374,7 @@ function initProcedsBlockly(customStatementType) {
     ),
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
-    mutationToDom: makeProcedureMutationToDom(),
+    mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
     domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
     compose: Blockly.Blocks['procedures_defreturn'].compose,
@@ -449,7 +414,7 @@ function initProcedsBlockly(customStatementType) {
     ),
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
-    mutationToDom: makeProcedureMutationToDom(),
+    mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
     domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
     compose: Blockly.Blocks['procedures_defreturn'].compose,
