@@ -114,6 +114,13 @@ function initProcedsBlockly(customStatementType) {
     if (index === undefined) {
       self.arguments_.push(name);
       self.updateParams_();
+
+      var blocks = self.workspace.getAllBlocks();
+      for (block of blocks)
+        if (block.type === self.callType_ && block.getProcedureCall() === self.getProcedureDef()[0]) {
+          block.arguments_.push(name);
+          block.updateShape_();
+        }
     }
 
     var createCallButton = new Blockly.FieldImage(
@@ -138,6 +145,13 @@ function initProcedsBlockly(customStatementType) {
         self.arguments_.forEach(function(name, i) {
           addParameter(this, i, name, true);
         }.bind(self));
+
+        var blocks = self.workspace.getAllBlocks();
+        for (block of blocks)
+          if (block.type === self.callType_ && block.getProcedureCall() === self.getProcedureDef()[0]) {
+            block.arguments_.splice(i, 1);
+            block.updateShape_();
+          }
       }
     );
 
