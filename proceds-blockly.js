@@ -1,5 +1,6 @@
 var PLUS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAQAAAD2e2DtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfhDAUCCjFLV0NqAAAC60lEQVR42u3dQW7aQABA0Wl7MMjJICeDnIwuqm4qVQrYjMH/Pa/jsfFnTJDwjAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBUP7Y+gClOY4zznX9zHmN8bn3gLHcYtwXbYevDZ5nLost/G7dx2foUeNzyyy+BN7Zs8ncjeHvrvP/NAW9qvff/rueAn1sfwNMcX3hvL2S/3wPcVt7fTl+p/c4AfIsA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4mYHcBinVRdz+v+2tjlHfdrv8lRjHFZcyG3P22VmBPOWQrrsd+WtJ7iOjzkDzQrA5b/XpATmBHAY1ynj7MtxfD1/kDkBrP+RrGHC1ZnxX8Bpwhj7NOGV8z1A3IxbgBvA455+fcwAcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcT9mjLKcevTfFPn5/860AwQ58ehr2wnPw51C3jMccYgcwL48nyAu11nPB3AI2Je1bRHxMz7EPgxjuaBb7mO46zLP3MG+OMwjuM8ecx3cp419f81O4B51v7PY6evlO8B4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQN2fp2G0cV9zXhEVct7HfGeD6wntjisu4rbRdtj4VHnFYLYDD1qfCY9aZA7z/39jyBFz+N7fsRrD7yX+n62H+4zTG3QvWnscYn1sfOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALvzG8Ijm7EmMQYoAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTA1VDAyOjEwOjQ5LTA1OjAwJa2zowAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0wNVQwMjoxMDo0OS0wNTowMFTwCx8AAAAASUVORK5CYII=";
 var MINUS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAQAAAD2e2DtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfhDAUCCi+xWH4JAAABcUlEQVR42u3c7ZGCMBSG0etuYcTKls7AyrSEVWd4+bjnUECMeSbhD6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBzu4XHm2rUvPekD2yutR57/4itTLXU0/Pvs9SUW5TcDrDUyE3r9Na6ZwZKBWD5PxVKIBPAVGtknGsZibeBTADPyCjXE1idn8A0/gJjXFPgn0sEwIEljgAHwPc2Xx87QHMCaE4AzQmgOQE0J4DmBNCcAJoTQHMCaE4AzQmgOQE0J4DmBNCcAJoTQHMCaE4AzQmgOQE0J4DmBNDcb2SUsfc0T2re/utAO0BzPg49sot8HOoI+M5IDJIJ4OF+gI+F7gpyRcwxxa6Iyb0E3mvYB96y1kgtv2vijubS18QBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAWXq7xrTQhKAi3AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTA1VDAyOjEwOjQ3LTA1OjAwdZLI/gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0wNVQwMjoxMDo0Ny0wNTowMATPcEIAAAAASUVORK5CYII=";
+var WAND = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAB41BMVEUAAACrhwmsiArFmQTtxjftxjjOnwThrQrirQvOmQToxETpxkfUnwS2hQLYohPYoxW/igOXagHKjgPNkQXUnxzfsjngtDzVoR/NkgbLjwOkcwHIiwbov1PJjQnAggPiskDkulXBgwO8fATnuEjpwVq9fgeCUwC3eAW4eAOLWQCQVwDGjBLIiQKWWwC9fgHBhAFlOgBhNQDCggHHigFwPQBoNQDIhgHDqADBqQDOkAF4PgBjLwDIhwLFjAGUUgCJRACIQgCSTwDCiwHNkAJ2OABSJgCcWgqPQgCCOgB8OACPQgCcWgthLQD06Xj16nn47YT14Hv35YD14Xzx1G744Hv44Xvy1m/00nX31nj32Hb323b43Xb43nb43Hb32nb313f103bpwlz2zG/30W/31W/42W/422/43W/43G/42m/412/302/3z2/3zmj402j42Gj43Gj53mj53Wj42mj41mj30WjswEr401/52V/53V/54F/64V/531/522H4zErtsir4yD350j352Tn63TL63Cj61Bn4xQL3twD3tgD4xgD61QD73wD74QD72wD5zgD3vgD3uAD5ywD73AD86wD97wD85AD61AD4wgD2tQD5yQD01gDz3AD60wD4vwDsrgHqswH////vUbxMAAAATXRSTlMABAQHwMIIen0c8fIeCa6yCgI5e7Hp67WAPwOD/otJ/PxLev7+fAKSlQIG3OEIy9IBA+HpBAj1/v77DAr58ZMtKo3u/Q4BcGcTEGJzAcqMNfMAAAABYktHRKBe076gAAAAB3RJTUUH4QwFFBQHSAc27gAAANRJREFUGNNjYIAARiYGFMDMwsqGIsDu68eBzOfk8vfn5kHwefkCAgOD+AXAHEEhYRHR4JDQ0JAwMXEJSSkGaZnwiMio6JiY6Ni4+IREWQY5+aTklNS09PSMzKzsHAVFBgYl5dy8/ILCwqLiklIVVaAhaupl5RWVVdU1tXX1GpogY7W0Gxqbmlta29p1dCG26nV0dnX39Pb16xuA+YZGEyZOmjxl6rTpxiZgAVOzGTNnmVvMnjPX0gosYG0zz9bO3sHRab6zC1jA1c3dA0R7enn7MDAAABs9NIkRbjxSAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTA1VDIwOjIwOjA3LTA1OjAw6QjR4wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0wNVQyMDoyMDowNy0wNTowMJhVaV8AAAAASUVORK5CYII=";
 
 function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT = 'Describe el procedimiento...';
@@ -83,6 +84,20 @@ function initProcedsBlockly(customStatementType) {
   // [!] Adding custom procedure parameters
   // --------------------------------------
 
+  var createParameterCaller = function(procedureBlock, name) {
+    var xmlField = goog.dom.createDom('field', null, name);
+    xmlField.setAttribute('name', 'VAR');
+    var xmlBlock = goog.dom.createDom('block', null, xmlField);
+    xmlBlock.setAttribute('type', 'variables_get');
+
+    var callback = Blockly.ContextMenu.callbackFactory(procedureBlock, xmlBlock);
+    
+    return function() {
+      var block = callback();
+      block.$parent = procedureBlock.id;
+    };
+  };
+
   var addParameter = function(self, index, name) {
     var i = index === undefined ? self.arguments_.length : index;
     var name = name === undefined ? Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1) : name;
@@ -93,7 +108,17 @@ function initProcedsBlockly(customStatementType) {
       self.updateParams_();
     }
  
-    var removeParameter = new Blockly.FieldImage(
+    var createCallButton = new Blockly.FieldImage(
+      WAND,
+      16,
+      16,
+      Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name),
+      function() {
+        createParameterCaller(self, name)();
+      }
+    );
+
+    var removeParameterButton = new Blockly.FieldImage(
       MINUS,
       16,
       16,
@@ -124,7 +149,8 @@ function initProcedsBlockly(customStatementType) {
       .appendDummyInput(id)
       .appendField(Blockly.Msg.PROCEDURES_BEFORE_PARAMS)
       .appendField(nameField, 'ARG' + i)
-      .appendField(removeParameter);
+      .appendField(createCallButton)
+      .appendField(removeParameterButton);
   
     self.moveInputBefore(id, 'STACK');
   };
@@ -212,16 +238,7 @@ function initProcedsBlockly(customStatementType) {
           var option = {enabled: true};
           var name = this.arguments_[i];
           option.text = Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name);
-          var xmlField = goog.dom.createDom('field', null, name);
-          xmlField.setAttribute('name', 'VAR');
-          var xmlBlock = goog.dom.createDom('block', null, xmlField);
-          xmlBlock.setAttribute('type', 'variables_get');
-
-          var callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
-          option.callback = function() {
-            var block = callback();
-            block.$parent = this.id;
-          }.bind(this);
+          option.callback = createParameterCaller(this, name);
 
           options.unshift(option);
         }
