@@ -122,7 +122,7 @@ function initProcedsBlockly(customStatementType) {
       16,
       Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name),
       function() {
-        createParameterCaller(self, name)();
+        createParameterCaller(self, self.arguments_[i])();
       }
     );
 
