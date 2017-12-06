@@ -1,41 +1,3 @@
-// -------------------------------------
-// [!] Fixing FieldImage's click handler
-// -------------------------------------
-
-Blockly.FieldImage.prototype.init = function() {
-  if (this.fieldGroup_) {
-    // Image has already been initialized once.
-    return;
-  }
-  // Build the DOM.
-  /** @type {SVGElement} */
-  this.fieldGroup_ = Blockly.utils.createSvgElement('g', {}, null);
-  if (!this.visible_) {
-    this.fieldGroup_.style.display = 'none';
-  }
-  /** @type {SVGElement} */
-  this.imageElement_ = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'height': this.height_ + 'px',
-      'width': this.width_ + 'px'
-    },
-    this.fieldGroup_);
-  this.setValue(this.src_);
-  this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
-
-  // Configure the field to be transparent with respect to tooltips.
-  this.setTooltip(this.sourceBlock_);
-  Blockly.Tooltip.bindMouseEvents(this.imageElement_);
-
-  if (this.clickHandler_) // [!]
-    this.imageElement_.addEventListener("click", this.clickHandler_); 
-};
-
-// -------------------
-// [!] proceds-blockly
-// -------------------
-
 var PLUS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAQAAAD2e2DtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfhDAUCCjFLV0NqAAAC60lEQVR42u3dQW7aQABA0Wl7MMjJICeDnIwuqm4qVQrYjMH/Pa/jsfFnTJDwjAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBUP7Y+gClOY4zznX9zHmN8bn3gLHcYtwXbYevDZ5nLost/G7dx2foUeNzyyy+BN7Zs8ncjeHvrvP/NAW9qvff/rueAn1sfwNMcX3hvL2S/3wPcVt7fTl+p/c4AfIsA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4mYHcBinVRdz+v+2tjlHfdrv8lRjHFZcyG3P22VmBPOWQrrsd+WtJ7iOjzkDzQrA5b/XpATmBHAY1ynj7MtxfD1/kDkBrP+RrGHC1ZnxX8Bpwhj7NOGV8z1A3IxbgBvA455+fcwAcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcT9mjLKcevTfFPn5/860AwQ58ehr2wnPw51C3jMccYgcwL48nyAu11nPB3AI2Je1bRHxMz7EPgxjuaBb7mO46zLP3MG+OMwjuM8ecx3cp419f81O4B51v7PY6evlO8B4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQN2fp2G0cV9zXhEVct7HfGeD6wntjisu4rbRdtj4VHnFYLYDD1qfCY9aZA7z/39jyBFz+N7fsRrD7yX+n62H+4zTG3QvWnscYn1sfOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALvzG8Ijm7EmMQYoAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTA1VDAyOjEwOjQ5LTA1OjAwJa2zowAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0wNVQwMjoxMDo0OS0wNTowMFTwCx8AAAAASUVORK5CYII=";
 var MINUS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAQAAAD2e2DtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfhDAUCCi+xWH4JAAABcUlEQVR42u3c7ZGCMBSG0etuYcTKls7AyrSEVWd4+bjnUECMeSbhD6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBzu4XHm2rUvPekD2yutR57/4itTLXU0/Pvs9SUW5TcDrDUyE3r9Na6ZwZKBWD5PxVKIBPAVGtknGsZibeBTADPyCjXE1idn8A0/gJjXFPgn0sEwIEljgAHwPc2Xx87QHMCaE4AzQmgOQE0J4DmBNCcAJoTQHMCaE4AzQmgOQE0J4DmBNCcAJoTQHMCaE4AzQmgOQE0J4DmBNDcb2SUsfc0T2re/utAO0BzPg49sot8HOoI+M5IDJIJ4OF+gI+F7gpyRcwxxa6Iyb0E3mvYB96y1kgtv2vijubS18QBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAWXq7xrTQhKAi3AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTA1VDAyOjEwOjQ3LTA1OjAwdZLI/gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0wNVQwMjoxMDo0Ny0wNTowMATPcEIAAAAASUVORK5CYII=";
 
@@ -55,6 +17,67 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_ADD_PARAMETER_PROMPT = "Ingresa el nombre del parámetro";
   Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
   Blockly.Msg.PROCEDURES_PARAMETER = "parámetro";
+
+// -------------------------------------
+// [!] Fixing FieldImage's click handler
+// -------------------------------------
+
+  Blockly.FieldImage.prototype.init = function() {
+    if (this.fieldGroup_) {
+      // Image has already been initialized once.
+      return;
+    }
+    // Build the DOM.
+    /** @type {SVGElement} */
+    this.fieldGroup_ = Blockly.utils.createSvgElement('g', {}, null);
+    if (!this.visible_) {
+      this.fieldGroup_.style.display = 'none';
+    }
+    /** @type {SVGElement} */
+    this.imageElement_ = Blockly.utils.createSvgElement(
+      'image',
+      {
+        'height': this.height_ + 'px',
+        'width': this.width_ + 'px'
+      },
+      this.fieldGroup_);
+    this.setValue(this.src_);
+    this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+
+    // Configure the field to be transparent with respect to tooltips.
+    this.setTooltip(this.sourceBlock_);
+    Blockly.Tooltip.bindMouseEvents(this.imageElement_);
+
+    if (this.clickHandler_) // [!]
+      this.imageElement_.addEventListener("click", this.clickHandler_); 
+  };
+
+  // [!] Modifying callbackFactory to return the created block
+  Blockly.ContextMenu.callbackFactory = function(block, xml) {
+    return function() {
+      Blockly.Events.disable();
+      try {
+        var newBlock = Blockly.Xml.domToBlock(xml, block.workspace);
+        // Move the new block next to the old block.
+        var xy = block.getRelativeToSurfaceXY();
+        if (block.RTL) {
+          xy.x -= Blockly.SNAP_RADIUS;
+        } else {
+          xy.x += Blockly.SNAP_RADIUS;
+        }
+        xy.y += Blockly.SNAP_RADIUS * 2;
+        newBlock.moveBy(xy.x, xy.y);
+      } finally {
+        Blockly.Events.enable();
+      }
+      if (Blockly.Events.isEnabled() && !newBlock.isShadow()) {
+        Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
+      }
+      newBlock.select();
+
+      return newBlock; // [!]
+    };
+  };
 
   // --------------------------------------
   // [!] Adding custom procedure parameters
@@ -87,10 +110,11 @@ function initProcedsBlockly(customStatementType) {
       
       var blocks = self.workspace.getAllBlocks();
       for (block of blocks)
-        if (block.type === "variables_get") {
+        if (block.type === "variables_get" && block.$parent === self.$timestamp) {
           var varField = block.getField("VAR");
-          if (varField.getValue() === oldName)
+          if (varField.getValue() === oldName) {
             varField.setValue(newName);
+          }
         }
 
       return newName;
@@ -103,6 +127,27 @@ function initProcedsBlockly(customStatementType) {
       .appendField(removeParameter);
   
     self.moveInputBefore(id, 'STACK');
+  };
+
+  var makeProcedureMutationToDom = function() {
+    return function() {
+      var container = document.createElement('mutation');
+
+      for (var i = 0; i < this.arguments_.length; i++) {
+        var parameter = document.createElement('arg');
+        parameter.setAttribute('name', this.arguments_[i]);
+        container.appendChild(parameter);
+      }
+
+      // Save whether the statement input is visible.
+      if (!this.hasStatements_) {
+        container.setAttribute('statements', 'false');
+      }
+
+      container.setAttribute("timestamp", this.$timestamp || Date.now()); // [!]
+
+      return container;
+    }
   };
 
   var makeProcedureDomToMutation = function() {
@@ -119,9 +164,12 @@ function initProcedsBlockly(customStatementType) {
       // Show or hide the statement input.
       this.setStatements_(xmlElement.getAttribute('statements') !== 'false');
 
-      this.arguments_.forEach(function(name, i) {
+      this.arguments_.forEach(function(name, i) { // [!]
         addParameter(this, i, name);
       }.bind(this));
+
+      var timestamp = xmlElement.getAttribute("timestamp"); // [!]
+      this.$timestamp = timestamp || Date.now();
     };
   }
 
@@ -173,6 +221,8 @@ function initProcedsBlockly(customStatementType) {
       this.statementConnection_ = null;
 
       // if (!withParametersMutator) this.updateParams_();
+
+      this.$timestamp = Date.now(); // [!]
     };
   };
 
@@ -192,8 +242,13 @@ function initProcedsBlockly(customStatementType) {
           xmlField.setAttribute('name', 'VAR');
           var xmlBlock = goog.dom.createDom('block', null, xmlField);
           xmlBlock.setAttribute('type', 'variables_get');
-          xmlBlock.setAttribute('daddy', 'Hacer algo'); // [!]
-          option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+
+          var callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+          option.callback = function() {
+            var block = callback();
+            block.$parent = this.$timestamp;
+          }.bind(this);
+
           options.unshift(option);
         }
       }
@@ -276,6 +331,7 @@ function initProcedsBlockly(customStatementType) {
   );
   Blockly.Blocks['procedures_defnoreturn'].customContextMenu = makeProcedureCustomMenu();
   Blockly.Blocks['procedures_defnoreturn'].updateParams_ = makeUpdateParams();
+  Blockly.Blocks['procedures_defnoreturn'].mutationToDom = makeProcedureMutationToDom();
   Blockly.Blocks['procedures_defnoreturn'].domToMutation = makeProcedureDomToMutation();
 
   Blockly.Blocks['procedures_defreturn'].init = makeProcedureInit(
@@ -288,6 +344,7 @@ function initProcedsBlockly(customStatementType) {
   );
   Blockly.Blocks['procedures_defreturn'].customContextMenu = makeProcedureCustomMenu();
   Blockly.Blocks['procedures_defreturn'].updateParams_ = makeUpdateParams();
+  Blockly.Blocks['procedures_defreturn'].mutationToDom = makeProcedureMutationToDom();
   Blockly.Blocks['procedures_defreturn'].domToMutation = makeProcedureDomToMutation();
 
   // -------------------------------------------------
@@ -305,7 +362,7 @@ function initProcedsBlockly(customStatementType) {
     ),
     setStatements_: Blockly.Blocks['procedures_defnoreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
-    mutationToDom: Blockly.Blocks['procedures_defnoreturn'].mutationToDom,
+    mutationToDom: makeProcedureMutationToDom(),
     domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defnoreturn'].decompose,
     compose: Blockly.Blocks['procedures_defnoreturn'].compose,
@@ -345,7 +402,7 @@ function initProcedsBlockly(customStatementType) {
     ),
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
-    mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
+    mutationToDom: makeProcedureMutationToDom(),
     domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
     compose: Blockly.Blocks['procedures_defreturn'].compose,
@@ -385,7 +442,7 @@ function initProcedsBlockly(customStatementType) {
     ),
     setStatements_: Blockly.Blocks['procedures_defreturn'].setStatements_,
     updateParams_: makeUpdateParams(),
-    mutationToDom: Blockly.Blocks['procedures_defreturn'].mutationToDom,
+    mutationToDom: makeProcedureMutationToDom(),
     domToMutation: makeProcedureDomToMutation(),
     decompose: Blockly.Blocks['procedures_defreturn'].decompose,
     compose: Blockly.Blocks['procedures_defreturn'].compose,

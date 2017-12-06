@@ -1,7 +1,9 @@
 # proceds-blockly
 
 This library installs new custom procedures for blockly, with custom modifications:
-- The procedure blocks have their new context menu options at the top, including two options: "add parameter" and "remove parameter" (replacing the mutator window). The 'help' option was removed.
+- The parameters now can be easily added and removed with buttons, replacing the mutator popup.
+- The arguments (`variables_get`) are associated with the procedure. All this blocks now have a `$parent` field with the id of the procedure where they belong. **For this to work, you must save this `$parent` in the mutation of `variables_get`**.
+- The 'help' option was removed from the context menu.
 - The block `procedures_defnoreturn` has been splitted in `procedures_defnoreturn` and `procedures_defnoreturnnoparams`.
 - The block `procedures_defreturn` has been splitted in `procedures_defreturn`, `procedures_defreturnsimplewithparams` and `procedures_defreturnsimple`.
 - The blocks can be added on every category you want. If you want to create a category for the calls, use the custom names `PROCEDURE_CALLS` and `FUNCTION_CALLS`.
@@ -26,6 +28,8 @@ This library installs new custom procedures for blockly, with custom modificatio
   </category>
   <category name="Functions">
     <block type="procedures_defreturn"></block>
+    <block type="procedures_defreturnsimplewithparams"></block>
+    <block type="procedures_defreturnsimple"></block>
   </category>
   <category name="Commands">
     <category name="Procedure invocations" custom="PROCEDURE_CALLS">
