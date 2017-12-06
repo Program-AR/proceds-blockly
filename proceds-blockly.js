@@ -98,9 +98,17 @@ function initProcedsBlockly(customStatementType) {
     };
   };
 
-  var addParameter = function(self, index, name) {
+  var getAvailableName = function(self, name) {
+    var result = name;
+    while (self.arguments_.some(it => it === result))
+      result += "_";
+    return result;
+  }
+
+  var addParameter = function(self, index, name, forceName) {
     var i = index === undefined ? self.arguments_.length : index;
-    var name = name === undefined ? Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1) : name;
+    var tmpName = name === undefined ? Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1) : name;
+    var name = forceName ? tmpName : getAvailableName(self, tmpName);
     var id = "INPUTARG" + i;
 
     if (index === undefined) {
@@ -124,13 +132,21 @@ function initProcedsBlockly(customStatementType) {
       16,
       Blockly.Msg.PROCEDURES_REMOVE_PARAMETER,
       function() {
-        self.removeInput(id);
+        for (var j = 0; j < self.arguments_.length; j++)
+          self.removeInput("INPUTARG" + j);
         self.arguments_.splice(i, 1);
+        self.arguments_.forEach(function(name, i) {
+          addParameter(this, i, name, true);
+        }.bind(self));
       }
     );
 
     var nameField = new Blockly.FieldTextInput(name, function(newName) {
       var oldName = self.arguments_[i];
+
+      if (oldName !== newName)
+        newName = getAvailableName(self, newName);
+
       self.arguments_[i] = newName;
       
       var blocks = self.workspace.getAllBlocks();
