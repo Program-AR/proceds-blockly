@@ -105,17 +105,17 @@ function initProcedsBlockly(customStatementType) {
     return result;
   }
 
-  var addParameter = function(self, index, name, forceName) {
+  var addParameter = function(self, index, name) {
     var i = index === undefined ? self.arguments_.length : index;
     var tmpName = name === undefined ? Blockly.Msg.PROCEDURES_PARAMETER + " " + (i + 1) : name;
-    var name = forceName ? tmpName : getAvailableName(self, tmpName);
+    var name = index === undefined ? getAvailableName(self, tmpName) : tmpName;
     var id = "INPUTARG" + i;
 
     if (index === undefined) {
       self.arguments_.push(name);
       self.updateParams_();
     }
- 
+
     var createCallButton = new Blockly.FieldImage(
       WAND,
       16,
