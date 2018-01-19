@@ -51,8 +51,10 @@ function initProcedsBlockly(customStatementType) {
 
     var self = this;
     if (this.clickHandler_) // [!]
-      this.imageElement_.addEventListener("mousedown", function(event) {
-        if (event.button === 0) self.clickHandler_();
+      this.imageElement_.addEventListener("click", function(event) {
+        if (event.button === 0) {
+          self.clickHandler_();
+        }
       }); 
   };
 
