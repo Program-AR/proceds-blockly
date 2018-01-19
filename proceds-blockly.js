@@ -167,13 +167,21 @@ function initProcedsBlockly(customStatementType) {
       self.arguments_[i] = newName;
       
       var blocks = self.workspace.getAllBlocks();
-      for (block of blocks)
+      for (block of blocks) {
+        if (block.type === self.callType_ && block.getProcedureCall() === self.getProcedureDef()[0]) {
+          block.arguments_ = block.arguments_.map(function(it) {
+            return it === oldName ? newName : it;
+          });
+          block.updateShape_();
+        }
+
         if (block.type === "variables_get" && block.$parent === self.id) {
           var varField = block.getField("VAR");
           if (varField.getValue() === oldName) {
             varField.setValue(newName);
           }
         }
+      }
 
       return newName;
     });
