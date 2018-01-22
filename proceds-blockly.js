@@ -19,9 +19,9 @@ function initProcedsBlockly(customStatementType) {
   Blockly.Msg.PROCEDURES_REMOVE_PARAMETER = "Quitar parámetro";
   Blockly.Msg.PROCEDURES_PARAMETER = "parámetro";
 
-// -------------------------------------
-// [!] Fixing FieldImage's click handler
-// -------------------------------------
+  // -------------------------------------
+  // [!] Fixing FieldImage's click handler
+  // -------------------------------------
 
   Blockly.FieldImage.prototype.init = function() {
     if (this.fieldGroup_) {
@@ -84,6 +84,11 @@ function initProcedsBlockly(customStatementType) {
       return newBlock; // [!]
     };
   };
+
+  // DALE
+  // // [!] Fixing procedure naming
+  // var oldDomToMutation = 
+  // Blockly.Blocks['procedures_defnoreturn'].mutationToDom
 
   // --------------------------------------
   // [!] Adding custom procedure parameters
@@ -220,8 +225,8 @@ function initProcedsBlockly(customStatementType) {
 
   var makeProcedureInit = function(withReturn, withStatements = true, withParameters = false, defaultName, title, comment, tooltip, helpUrl) {
     return function() {
-      var nameField = new Blockly.FieldTextInput(defaultName, Blockly.Procedures.rename);
-      nameField.text_ = Math.random().toString(); // [!] avoid xml loader to rename while loading
+      var defaultLegalName = Blockly.Procedures.findLegalName(defaultName, this);
+      var nameField = new Blockly.FieldTextInput(defaultLegalName, Blockly.Procedures.rename);
       nameField.setSpellcheck(false);
 
       var self = this;
