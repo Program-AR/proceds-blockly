@@ -220,8 +220,8 @@ function initProcedsBlockly(customStatementType) {
 
   var makeProcedureInit = function(withReturn, withStatements = true, withParameters = false, defaultName, title, comment, tooltip, helpUrl) {
     return function() {
-      var nameField = new Blockly.FieldTextInput(defaultName, // [!]
-          Blockly.Procedures.rename);
+      var nameField = new Blockly.FieldTextInput(defaultName, Blockly.Procedures.rename);
+      nameField.text_ = Math.random().toString(); // [!] avoid xml loader to rename while loading
       nameField.setSpellcheck(false);
 
       var self = this;
