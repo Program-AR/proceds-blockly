@@ -85,11 +85,6 @@ function initProcedsBlockly(customStatementType) {
     };
   };
 
-  // DALE
-  // // [!] Fixing procedure naming
-  // var oldDomToMutation = 
-  // Blockly.Blocks['procedures_defnoreturn'].mutationToDom
-
   // --------------------------------------
   // [!] Adding custom procedure parameters
   // --------------------------------------
