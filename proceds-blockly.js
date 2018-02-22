@@ -50,12 +50,17 @@ function initProcedsBlockly(customStatementType) {
     Blockly.Tooltip.bindMouseEvents(this.imageElement_);
 
     var self = this;
-    if (this.clickHandler_) // [!]
+
+    if (this.clickHandler_) { // [!]
       this.imageElement_.addEventListener("mousedown", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
         if (event.button === 0) {
           self.clickHandler_();
         }
-      }); 
+      });
+    }
   };
 
   // [!] Modifying callbackFactory to return the created block
