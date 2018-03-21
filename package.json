@@ -1,0 +1,19 @@
+{
+  "name": "proceds-blockly",
+  "version": "1.0.0",
+  "description": "This library installs new custom procedures for blockly, with custom modifications: - The parameters now can be easily added and removed with buttons, replacing the mutator popup. - The arguments (`variables_get`) are associated with the procedure. All this blocks now have a `$parent` field with the id of the procedure where they belong. **For this to work, you must save this `$parent` in the mutation of `variables_get`**. - The 'help' option was removed from the context menu. - The block `procedures_defnoreturn` has been splitted in `procedures_defnoreturn` and `procedures_defnoreturnnoparams`. - The block `procedures_defreturn` has been splitted in `procedures_defreturn`, `procedures_defreturnsimplewithparams` and `procedures_defreturnsimple`. - The blocks can be added on every category you want. If you want to create a category for the calls, use the custom names `PROCEDURE_CALLS` and `FUNCTION_CALLS`. - Procedure descriptions are disabled by default.",
+  "main": "proceds-blockly.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/program-ar/proceds-blockly.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/program-ar/proceds-blockly/issues"
+  },
+  "homepage": "https://github.com/program-ar/proceds-blockly#readme"
+}
