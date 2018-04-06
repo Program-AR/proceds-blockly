@@ -263,7 +263,11 @@ window.initProcedsBlockly = function(customStatementType) {
         this.setCommentText(comment);
       }
       this.setCommentText(null);
-      this.setColour(Blockly.Blocks.procedures.HUE);
+      this.setColour((
+        Blockly.CUSTOM_COLORS && (
+          Blockly.CUSTOM_COLORS[this.type] ||
+          Blockly.CUSTOM_COLORS[withReturn ? "function" : "procedure"]
+        )) || Blockly.Blocks.procedures.HUE);
       this.setTooltip(tooltip);
       this.setHelpUrl(helpUrl);
       this.arguments_ = [];
@@ -271,6 +275,26 @@ window.initProcedsBlockly = function(customStatementType) {
       this.statementConnection_ = null;
 
       // if (!withParametersMutator) this.updateParams_();
+
+      // [!] adding create call button
+      // TODO: Hacer esto
+      // var xmlMutation = goog.dom.createDom('mutation');
+      // xmlMutation.setAttribute('name', name);
+      // for (var i = 0; i < self.arguments_.length; i++) {
+      //   var xmlArg = goog.dom.createDom('arg');
+      //   xmlArg.setAttribute('name', self.arguments_[i]);
+      //   xmlMutation.appendChild(xmlArg);
+      // }
+      // var xmlBlock = goog.dom.createDom('block', null, xmlMutation);
+      // xmlBlock.setAttribute('type', self.callType_);
+      // var createCallButton = new Blockly.FieldImage(
+      //   WAND,
+      //   16,
+      //   16,
+      //   "",
+      //   Blockly.ContextMenu.callbackFactory(self, xmlBlock)
+      // );
+      // input.appendField(createCallButton);
     };
   };
 
@@ -338,13 +362,14 @@ window.initProcedsBlockly = function(customStatementType) {
     };
   };
 
-  // ----------------------------------------------------
-  // [!] Setting custom statement type to procedure calls
-  // ----------------------------------------------------
+  // ---------------------------------------------------------------------
+  // [!] Setting custom statement type to procedure calls and adding color
+  // ---------------------------------------------------------------------
 
   var oldProceduresCallNoReturnInit = Blockly.Blocks['procedures_callnoreturn'].init;
   Blockly.Blocks['procedures_callnoreturn'].init = function() {
     oldProceduresCallNoReturnInit.call(this);
+
     if (customStatementType) {
       this.jsonInit({
         type: customStatementType,
@@ -352,6 +377,27 @@ window.initProcedsBlockly = function(customStatementType) {
         nextStatement: customStatementType
       });
     }
+
+    this.setColour((
+      Blockly.CUSTOM_COLORS && (
+        Blockly.CUSTOM_COLORS[this.type] ||
+        Blockly.CUSTOM_COLORS.procedure_call
+      )) || Blockly.Blocks.procedures.HUE);
+  };
+
+  // ----------------------------------
+  // [!] Adding color to function calls
+  // ----------------------------------
+
+  var oldProceduresCallReturnInit = Blockly.Blocks['procedures_callreturn'].init;
+  Blockly.Blocks['procedures_callreturn'].init = function() {
+    oldProceduresCallReturnInit.call(this);
+
+    this.setColour((
+      Blockly.CUSTOM_COLORS && (
+        Blockly.CUSTOM_COLORS[this.type] || // TODO: Usar this.type en todos los cosos de colors
+        Blockly.CUSTOM_COLORS.function_call
+      )) || Blockly.Blocks.procedures.HUE);
   };
 
   // -------------------------------

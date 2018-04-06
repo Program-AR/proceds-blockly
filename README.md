@@ -8,6 +8,7 @@ This library installs new custom procedures for blockly, with custom modificatio
 - The block `procedures_defreturn` has been splitted in `procedures_defreturn`, `procedures_defreturnsimplewithparams` and `procedures_defreturnsimple`.
 - The blocks can be added on every category you want. If you want to create a category for the calls, use the custom names `PROCEDURE_CALLS` and `FUNCTION_CALLS`.
 - Procedure descriptions are disabled by default.
+- Support for a `Blockly.CUSTOM_COLORS` object.
 
 ## Usage
 ```
