@@ -52,4 +52,4 @@ This library installs new custom procedures for blockly, with custom modificatio
   </xml>
 ```
 
-See the [demo](program-ar.github.io/proceds-blockly)!
+See the [demo](https://program-ar.github.io/proceds-blockly)!
