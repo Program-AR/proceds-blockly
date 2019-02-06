@@ -2,7 +2,7 @@ var PLUS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAQAAAD2e2DtAA
 var MINUS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAQAAAD2e2DtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfhDAUCCi+xWH4JAAABcUlEQVR42u3c7ZGCMBSG0etuYcTKls7AyrSEVWd4+bjnUECMeSbhD6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBzu4XHm2rUvPekD2yutR57/4itTLXU0/Pvs9SUW5TcDrDUyE3r9Na6ZwZKBWD5PxVKIBPAVGtknGsZibeBTADPyCjXE1idn8A0/gJjXFPgn0sEwIEljgAHwPc2Xx87QHMCaE4AzQmgOQE0J4DmBNCcAJoTQHMCaE4AzQmgOQE0J4DmBNCcAJoTQHMCaE4AzQmgOQE0J4DmBNDcb2SUsfc0T2re/utAO0BzPg49sot8HOoI+M5IDJIJ4OF+gI+F7gpyRcwxxa6Iyb0E3mvYB96y1kgtv2vijubS18QBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAWXq7xrTQhKAi3AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEyLTA1VDAyOjEwOjQ3LTA1OjAwdZLI/gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMi0wNVQwMjoxMDo0Ny0wNTowMATPcEIAAAAASUVORK5CYII=";
 var HAND = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfiBAUBKBeKSgeBAAABTElEQVQoz22QzyvDcRjHX5/vvrMyStI2uZgftdVCSpJCyW1y00oUF+Xg4OIkx5VyUyJOsgv/gnJw4YCSSFMyB5pGbLJ99/k8LltreB2f9+v50eOigoc5FvGTJF8pugCwaKaNaE98uf9zMBXwjtNpbvmuaH2B0+HXuuyMEbOlQ4U1M5ZVcYbowg02YfZW5cnE9JIROdI7jsiOacoMPLZdEYPR1ouQkxCRG+feESlIXkQOzLR+NhvCpc3UbPcHAoRsADcAQ0Twq0ZosQgEVY0SqvGpkAUCxkIUYRP4bZRRNi9pvaD+TwXyFseHuYzy/Kt8CWfQ5Ems6C/5y7uZyDEH0Nt8vq0dUx0XzaapPyIIoIi23+47+SrlTvrTjLhKy2wmO95OqiacS+QBH9gAFDlOZnYbrimWOixSZCwUlK+vZd7bXiPldyi0yqX1OtkfCBS/9XAtDKAAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMDQtMDVUMDQ6NDQ6NDItMDM6MDD+uUN1AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTA0LTA1VDA0OjQwOjIzLTAzOjAw5hdZgAAAAABJRU5ErkJggg==";
 
-window.initProcedsBlockly = function(customStatementType) {
+window.initProcedsBlockly = function(customStatementType, initialize = () => {}) {
   Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT = 'Describe el procedimiento...';
   Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE = "Hacer algo";
   Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE = "Definir";
@@ -223,7 +223,17 @@ window.initProcedsBlockly = function(customStatementType) {
     };
   }
 
-  var makeProcedureInit = function(withReturn, withStatements = true, withParameters = false, defaultName, title, comment, tooltip, helpUrl) {
+  var makeProcedureInit = function(
+    withReturn,
+    withStatements = true,
+    withParameters = false,
+    defaultName,
+    title,
+    comment,
+    tooltip,
+    helpUrl,
+    returnMsg = Blockly.Msg.PROCEDURES_DEFRETURN_RETURN
+  ) {
     return function() {
       var defaultLegalName = Blockly.Procedures.findLegalName(defaultName, this);
       var nameField = new Blockly.FieldTextInput(defaultLegalName, Blockly.Procedures.rename);
@@ -251,7 +261,7 @@ window.initProcedsBlockly = function(customStatementType) {
       if (withReturn)
         this.appendValueInput('RETURN')
             .setAlign(Blockly.ALIGN_RIGHT)
-            .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
+            .appendField(returnMsg);
 
       // if (withParametersMutator)
       //   this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
@@ -553,7 +563,17 @@ window.initProcedsBlockly = function(customStatementType) {
     defType_: 'procedures_defreturnsimple'
   };
 
-  // -------------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // [!] Calling `initialize` to support another types of procedures
+  // ---------------------------------------------------------------
+  initialize(
+    makeProcedureInit,
+    makeUpdateParams,
+    makeProcedureDomToMutation,
+    makeProcedureCustomMenu
+  );
+
+    // -------------------------------------------------------------------
   // [!] Adding two flyoutCategories: PROCEDURE_CALLS and FUNCTION_CALLS
   // -------------------------------------------------------------------
 
