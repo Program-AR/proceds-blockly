@@ -101,11 +101,23 @@ window.initProcedsBlockly = function(customStatementType, initialize = () => {})
     xmlBlock.setAttribute('type', 'variables_get');
 
     var callback = Blockly.ContextMenu.callbackFactory(procedureBlock, xmlBlock);
-    
+
     return function() {
       var block = callback();
       block.$parent = procedureBlock.id;
-      block.moveBy(procedureBlock.width, -14);
+
+      try {
+        Blockly.Events.disabled_ = 1;
+        const posParent = procedureBlock.getRelativeToSurfaceXY();
+        const pos = block.getRelativeToSurfaceXY();
+        let width = procedureBlock.width;
+        const returnBlock = procedureBlock.inputList.find((it) => it.name === "RETURN");
+        if (returnBlock) width -= returnBlock.renderWidth - 8;
+
+        block.moveBy(posParent.x - pos.x + width + 16, posParent.y - pos.y + 6);
+      } finally {
+        Blockly.Events.disabled_ = 0;
+      }
     };
   };
 
@@ -173,7 +185,7 @@ window.initProcedsBlockly = function(customStatementType, initialize = () => {})
         newName = getAvailableName(self, newName);
 
       self.arguments_[i] = newName;
-      
+
       var blocks = self.workspace.getAllBlocks();
       for (block of blocks) {
         if (block.type === self.callType_ && block.getProcedureCall() === self.getProcedureDef()[0]) {
@@ -200,7 +212,7 @@ window.initProcedsBlockly = function(customStatementType, initialize = () => {})
       .appendField(nameField, 'ARG' + i)
       .appendField(createCallButton)
       .appendField(removeParameterButton);
-  
+
     self.moveInputBefore(id, 'STACK');
   };
 
@@ -305,7 +317,22 @@ window.initProcedsBlockly = function(customStatementType, initialize = () => {})
           var xmlBlock = goog.dom.createDom('block', null, xmlMutation);
           xmlBlock.setAttribute('type', self.callType_);
 
-          Blockly.ContextMenu.callbackFactory(self, xmlBlock)();
+          const block = Blockly.ContextMenu.callbackFactory(self, xmlBlock)();
+
+          try {
+            const procedureBlock = self;
+
+            Blockly.Events.disabled_ = 1;
+            const posParent = procedureBlock.getRelativeToSurfaceXY();
+            const pos = block.getRelativeToSurfaceXY();
+            let width = procedureBlock.width;
+            const returnBlock = procedureBlock.inputList.find((it) => it.name === "RETURN");
+            if (returnBlock) width -= returnBlock.renderWidth - 8;
+
+            block.moveBy(posParent.x - pos.x + width + 16, posParent.y - pos.y + 6);
+          } finally {
+            Blockly.Events.disabled_ = 0;
+          }
         }
       );
       input.appendField(createCallButton);
