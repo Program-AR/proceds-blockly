@@ -105,6 +105,7 @@ window.initProcedsBlockly = function(customStatementType, initialize = () => {})
     return function() {
       var block = callback();
       block.$parent = procedureBlock.id;
+      block.moveBy(procedureBlock.width, -14);
     };
   };
 
