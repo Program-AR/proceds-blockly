@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Proceds Blockly - Demo</title>
-  <script src="bower_components/blockly-package/blockly_compressed.js"></script>
-  <script src="bower_components/blockly-package/blocks_compressed.js"></script>
-  <script src="bower_components/blockly-package/es.js"></script>
-  <script src="bower_components/blockly-package/javascript_compressed.js"></script>
+  <script src="node_modules/blockly-package/blockly_compressed.js"></script>
+  <script src="node_modules/blockly-package/blocks_compressed.js"></script>
+  <script src="node_modules/blockly-package/es.js"></script>
+  <script src="node_modules/blockly-package/javascript_compressed.js"></script>
   <script src="proceds-blockly-original.js"></script>
   <script src="proceds-blockly.js"></script>
   <script>
     initProcedsBlockly();
   </script>
 </head>
+
 <body>
   <h1><a href="https://program.ar">Program.AR</a> -
     Procedures for Blockly </h1>
@@ -54,11 +56,12 @@
     var workspace = Blockly.inject(
       "blocklyDiv",
       {
-        media: "bower_components/blockly-package/media/",
+        media: "node_modules/blockly-package/media/",
         toolbox: document.getElementById("toolbox")
       }
     );
   </script>
 
 </body>
+
 </html>
