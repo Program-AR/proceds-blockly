@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/program-ar/proceds-blockly#readme",
   "dependencies": {
-    "blockly-package": "Program-AR/blockly-package#v0-15"
+    "blockly-package": "1.0.0"
   }
 }
