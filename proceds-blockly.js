@@ -60,6 +60,9 @@ window.initProcedsBlockly = function(customStatementType, initialize = () => {})
           self.clickHandler_();
         }
       });
+      this.mouseDownWrapper_ =
+        Blockly.bindEventWithChecks_(
+            this.fieldGroup_, 'mousedown', this, this.clickHandler_);
     }
   };
 
