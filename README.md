@@ -15,8 +15,8 @@ This library installs new custom procedures for blockly, with custom modificatio
   <script src="node_modules/proceds-blockly/proceds-blockly-original.js"></script>
   <script src="node_modules/proceds-blockly/proceds-blockly.js"></script>
   <script>
-    initProcedsBlockly();
-    // or initProcedsBlockly("Statement"); for custom statement type configurations
+    ProcedsBlockly.init();
+    // or ProcedsBlockly.init("Statement"); for custom statement type configurations
   </script>
 ```
 
