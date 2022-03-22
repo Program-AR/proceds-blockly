@@ -11,10 +11,20 @@ This library installs new custom procedures for blockly, with custom modificatio
 - Support for a `Blockly.CUSTOM_COLORS` object.
 
 ## Usage
+
+If you desire to use a different language than Spanish,  you can define your own translations for the needed blocks using `Blockly.Msg`, for example:
+
+```javascript
+Blockly.Msg.PROCEDURES_DEFNORETURN_COMMENT = 'your translation';
+```
+
+Then proceed to call `ProcedsBlockly.init()` to load these new translations. Otherwise, you can use the default language by calling `ProcedsBlockly.setDefacultLocale()`:
+
 ```
   <script src="node_modules/proceds-blockly/proceds-blockly-original.js"></script>
   <script src="node_modules/proceds-blockly/proceds-blockly.js"></script>
   <script>
+    ProcedsBlockly.setDefacultLocale() // if no translation was loaded previously
     ProcedsBlockly.init();
     // or ProcedsBlockly.init("Statement"); for custom statement type configurations
   </script>
